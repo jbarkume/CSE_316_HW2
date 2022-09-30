@@ -7,6 +7,9 @@ import jsTPS from './common/jsTPS.js';
 
 // OUR TRANSACTIONS
 import MoveSong_Transaction from './transactions/MoveSong_Transaction.js';
+import AddSong_Transaction from './transactions/AddSong_Transaction.js';
+import RemoveSong_Transaction from './transactions/RemoveSong_Transaction.js';
+import EditSong_Transaction from './transactions/EditSong_Transaction.js';
 
 // THESE REACT COMPONENTS ARE MODALS
 import DeleteListModal from './components/DeleteListModal.js';
@@ -241,6 +244,26 @@ class App extends React.Component {
         let transaction = new MoveSong_Transaction(this, start, end);
         this.tps.addTransaction(transaction);
     }
+
+    // adds an add song transaction to stack
+    addAddSongTransaction = () => {
+        let transaction = new AddSong_Transaction(this)
+        this.tps.addTransaction(transaction);
+    }
+
+    // adds a remove song transaction to stack
+    addRemoveSongTransaction = () => {
+        let song = this.getSong(this.songIndex)
+        let transaction = new RemoveSong_Transaction(this, song)
+        this.tps.addTransaction(transaction); 
+    }
+
+    addEditSongTransaction = () => {
+        let song = this.getSong(this.songIndex)
+        let transaction = new EditSong_Transaction(this, song)
+        this.tps.addTransaction(transaction); 
+    }
+
     // THIS FUNCTION BEGINS THE PROCESS OF PERFORMING AN UNDO
     undo = () => {
         if (this.tps.hasTransactionToUndo()) {
@@ -288,6 +311,27 @@ class App extends React.Component {
         this.songIndex = -1;
     }
 
+    // Changes song at specific index to song given
+    changeSong = (index, song) => {
+        this.state.currentList.songs.splice(index, 1, song);
+        
+        this.setState(prevState => ({
+            currentList: prevState.currentList,
+            listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
+            sessionData: prevState.sessionData
+        }));
+    }
+
+    // get song at specific index
+    getSong = (index) => {
+        if (this.state.currentList !== null) {
+            return this.state.currentList.songs[this.songIndex];
+        }
+        else {
+            return null;
+        }
+    }
+
     // THIS FUNCTION SHOWS THE MODAL FOR PROMPTING THE USER
     // TO SEE IF THEY REALLY WANT TO DELETE THE LIST
     showDeleteListModal() {
@@ -319,6 +363,18 @@ class App extends React.Component {
             artist: "Unknown",
             youTubeId: "dQw4w9WgXcQ"
         })
+
+        this.setState(prevState => ({
+            currentList: newList,
+            listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
+            sessionData: prevState.sessionData
+        }))
+    }
+
+    // adds song at specific index (only used for undoing remove song transaction)
+    addSong = (index, song) => {
+        let newList = this.state.currentList;
+        newList.songs.splice(index, 0, song)
 
         this.setState(prevState => ({
             currentList: newList,
@@ -403,7 +459,7 @@ class App extends React.Component {
                     undoCallback={this.undo}
                     redoCallback={this.redo}
                     closeCallback={this.closeCurrentList}
-                    addSongCallback={this.addSong}
+                    addSongCallback={this.addAddSongTransaction}
                 />
                 <PlaylistCards
                     currentList={this.state.currentList}
@@ -421,10 +477,10 @@ class App extends React.Component {
                     songIndex={this.songIndex}
                     currentList={this.state.currentList}
                     hideDeleteSongModalCallback={this.hideDeleteSongModal}
-                    deleteSongCallback={this.deleteMarkedSong}
+                    deleteSongCallback={this.addRemoveSongTransaction}
                 />
                 <EditSongModal
-                    editSongCallback={this.editSong}
+                    editSongCallback={this.addEditSongTransaction}
                     hideEditSongModalCallback={this.hideEditSongModal}
                 />
             </div>
