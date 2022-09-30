@@ -318,7 +318,7 @@ class App extends React.Component {
         this.showEditSongModal();
     }
 
-    editSong() {
+    editSong = () => {
         let title = document.getElementById("title-modal-input").value;
         let artist = document.getElementById("artist-modal-input").value;
         let youTubeId = document.getElementById("youTubeId-modal-input").value;
@@ -326,7 +326,10 @@ class App extends React.Component {
             "title": title,
             "artist": artist,
             "youTubeId": youTubeId
-        }
+        };
+
+
+
         let newList = this.state.currentList;
         newList.songs[this.songIndex] = newSong;
 
@@ -404,7 +407,6 @@ class App extends React.Component {
                     deleteSongCallback={this.deleteMarkedSong}
                 />
                 <EditSongModal
-                    currentList={this.state.currentList}
                     editSongCallback={this.editSong}
                     hideEditSongModalCallback={this.hideEditSongModal}
                 />

@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 
 export default class EditSongModal extends Component {
     render() {
-        const {currentList, editSongCallback, hideEditSongModalCallback} = this.props;
-        console.log(currentList);
+        const {editSongCallback, hideEditSongModalCallback} = this.props;
         return (
             <div 
                 className="modal" 
