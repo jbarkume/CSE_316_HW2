@@ -311,6 +311,22 @@ class App extends React.Component {
         modal.classList.remove("is-visible");
     }
 
+    // Functions for adding songs
+    addSong = () => {
+        let newList = this.state.currentList;
+        newList.songs.push({
+            title: "Untitled",
+            artist: "Unknown",
+            youTubeId: "dQw4w9WgXcQ"
+        })
+
+        this.setState(prevState => ({
+            currentList: newList,
+            listKeyPairMarkedForDeletion : prevState.listKeyPairMarkedForDeletion,
+            sessionData: prevState.sessionData
+        }))
+    }
+
     // Functions for editing song and modals
 
     markListForEdit = (index) => {
@@ -387,6 +403,7 @@ class App extends React.Component {
                     undoCallback={this.undo}
                     redoCallback={this.redo}
                     closeCallback={this.closeCurrentList}
+                    addSongCallback={this.addSong}
                 />
                 <PlaylistCards
                     currentList={this.state.currentList}
