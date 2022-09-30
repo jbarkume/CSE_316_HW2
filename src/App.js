@@ -325,7 +325,7 @@ class App extends React.Component {
     // get song at specific index
     getSong = (index) => {
         if (this.state.currentList !== null) {
-            return this.state.currentList.songs[this.songIndex];
+            return this.state.currentList.songs[index];
         }
         else {
             return null;
@@ -372,7 +372,7 @@ class App extends React.Component {
     }
 
     // adds song at specific index (only used for undoing remove song transaction)
-    addSong = (index, song) => {
+    addSongAt = (index, song) => {
         let newList = this.state.currentList;
         newList.songs.splice(index, 0, song)
 
@@ -438,6 +438,7 @@ class App extends React.Component {
         let canUndo = this.tps.hasTransactionToUndo();
         let canRedo = this.tps.hasTransactionToRedo();
         let canClose = this.state.currentList !== null;
+        this.db.mutationUpdateSessionData(this.state.sessionData)
         return (
             <div id="root">
                 <Banner />
