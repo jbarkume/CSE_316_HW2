@@ -58,6 +58,18 @@ export default class SongCard extends React.Component {
         return this.props.id.substring("playlist-song-".length);
     }
 
+    onDeleteClick = (event) => {
+        event.preventDefault();
+        let index = this.getItemNum() - 1;
+        this.props.deleteSongCallback(index);
+    }
+
+    handleDoubleClick = (event) => {
+        event.preventDefault();
+        let index = this.getItemNum() - 1;
+        this.props.editSongCallback(index);
+    }
+
     render() {
         const { song } = this.props;
         let num = this.getItemNum();
@@ -75,6 +87,7 @@ export default class SongCard extends React.Component {
                 onDragEnter={this.handleDragEnter}
                 onDragLeave={this.handleDragLeave}
                 onDrop={this.handleDrop}
+                onDoubleClick={this.handleDoubleClick}
                 draggable="true"
             >
                 {num}. 
@@ -88,6 +101,7 @@ export default class SongCard extends React.Component {
                     id={"delete-song-" + num}
                     value={"\u2715"}
                     style={{marginLeft: "auto"}}
+                    onClick={this.onDeleteClick}
                 >
 
                 </input>
